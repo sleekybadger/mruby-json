@@ -68,14 +68,14 @@ mrb_value_to_string(mrb_state* mrb, mrb_value value, int pretty) {
 
   switch (mrb_type(value)) {
   case MRB_TT_FIXNUM:
-#ifndef MRB_WITHOUT_FLOAT
-  case MRB_TT_FLOAT:
-#endif
   case MRB_TT_TRUE:
   case MRB_TT_FALSE:
   case MRB_TT_UNDEF:
     str = mrb_funcall(mrb, value, "to_s", 0, NULL);
     break;
+#ifndef MRB_WITHOUT_FLOAT
+  case MRB_TT_FLOAT:
+#endif
   case MRB_TT_SYMBOL:
     value = mrb_funcall(mrb, value, "to_s", 0, NULL);
     /* FALLTHROUGH */
@@ -84,7 +84,7 @@ mrb_value_to_string(mrb_state* mrb, mrb_value value, int pretty) {
       int ai = mrb_gc_arena_save(mrb);
       char* ptr = RSTRING_PTR(value);
       char* end = RSTRING_END(value);
-      str = mrb_str_new_cstr(mrb, "\""); 
+      str = mrb_str_new_cstr(mrb, "\"");
       while (ptr < end && *ptr) {
         switch (*ptr) {
         case '\\':
@@ -114,7 +114,7 @@ mrb_value_to_string(mrb_state* mrb, mrb_value value, int pretty) {
         }
         ptr++;
       }
-      mrb_str_cat_cstr(mrb, str, "\""); 
+      mrb_str_cat_cstr(mrb, str, "\"");
       mrb_gc_arena_restore(mrb, ai);
     }
     break;
@@ -183,7 +183,7 @@ mrb_value_to_string(mrb_state* mrb, mrb_value value, int pretty) {
       else
         str = mrb_value_to_string(mrb, mrb_funcall(mrb, value, "to_s", 0, NULL), pretty);
     }
-  } 
+  }
   return str;
 }
 
